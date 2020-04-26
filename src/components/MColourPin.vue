@@ -43,8 +43,10 @@ export default class MColourPin extends Vue {
 <style scoped>
 
 .MColourPin {
-    width: 2em;
-    height: 2em;
+    width: 2.5em;
+    height: 2.5em;
+    /* Really wish I knew a better way to hide the label text... */
+    text-indent: -99999px;
     shape-outside: circle();
     clip-path: circle();
     background: lightblue;

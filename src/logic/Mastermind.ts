@@ -5,7 +5,7 @@ const N_COLOURS = 6;
 // Pin sequence
 export class Sequence {
 
-    seq: number[] = [4];
+    seq: number[] = new Array(N_PINS).fill(0);
     
     // Get pin colour
     at(i: number): number {
@@ -35,8 +35,10 @@ export class Mastermind {
     // Singleton instance
     private static _instance: Mastermind;
 
+    private answer: Sequence;
+
     private constructor() {
-        return;
+        this.answer = new Sequence([0, 1, 1, 2]);
     }
 
     // Singleton accessor
@@ -49,8 +51,53 @@ export class Mastermind {
         return Mastermind._instance;
     }
 
+    public getAnswer(): Sequence {
+        return this.answer;
+    }
+
     // Calculate the number of (black, white) pins for a given guess
-    public static calcPins(guess: Sequence, answer: Sequence) {
-        return;
+    public static calcPins(guess: Sequence) {
+        
+        let black = 0;
+        let white = 0;
+
+        // Pins already used
+        const guessUsed: boolean[] = new Array(N_PINS).fill(false);
+        const answerUsed: boolean[] = new Array(N_PINS).fill(false);
+
+        const answer = Mastermind.I().getAnswer();
+
+        // Check for full matches (black)
+        for (let i = 0; i < N_PINS; i++) {
+            if (answer.at(i) === guess.at(i)) {
+                black += 1;
+                guessUsed[i] = true;
+                answerUsed[i] = true;
+            }
+        }
+
+        // Check for partial matches (white)
+        // For all answer pins
+        for (let i = 0; i < N_PINS; i++) {
+            
+            if (!answerUsed[i]) {
+                
+                // For all guess pins
+                for (let j = 0; j < N_PINS; j++) {
+
+                    if (!guessUsed[j]) {
+                        
+                        if (answer.at(i) === guess.at(j)) {
+                            white += 1;
+                            guessUsed[j] = true;
+                            answerUsed[i] = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return { black, white }
     }
 }
