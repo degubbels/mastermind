@@ -17,10 +17,15 @@
             v-if="state==states.PRE"
             class="m-game-control"
         >
-
+            <h2>Welcome to Mastermind</h2>
             <button class="m-button"
                 @click="start"
             >Start</button>
+            <p>
+                Try to guess the hidden sequence by trying combinations.
+                Click or tap a coloured pin to change the colour.
+            </p>
+
         </div>
 
         <div v-for="i in nSequences" :key="i">
@@ -88,10 +93,14 @@ export default class MGameBoard extends Vue {
 .m-button {
     width: 10rem;
     background-color: white;
-    background-color: white;
+    padding: 2pt;
 }
 
 .m-game-control {
     align-self: center;
+}
+
+.m-game-control > * {
+    margin: 8pt;
 }
 </style>
