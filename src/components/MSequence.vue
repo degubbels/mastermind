@@ -1,9 +1,11 @@
 <template>
     <section class="m-sequence">
 
-        <button @click="processGo"
+        <button v-if="open" @click="processGo"
             class="sequence-confirm"
         >Go</button>
+        <div v-else class="sequence-confirm empty">
+        </div>
         
         <MColourPin
             v-on:colour-set="processColourSet(0, $event)"
@@ -45,6 +47,8 @@ import MCheckPins from '@/components/MCheckPins.vue';
 })
 export default class MSequence extends Vue {
 
+    open = true;
+
     score: any = {
         black: 0,
         white: 0
@@ -58,6 +62,8 @@ export default class MSequence extends Vue {
 
     processGo() {
         this.score = Mastermind.calcPins(this.sequence);
+        this.open = false;
+        this.$emit('go', this.score);
     }
 }
 </script>
@@ -68,6 +74,10 @@ export default class MSequence extends Vue {
 
     display: flex;
     justify-content: space-around;
+}
+
+.empty {
+    background-color: transparent !important;
 }
 
 .m-sequence .sequence-confirm {

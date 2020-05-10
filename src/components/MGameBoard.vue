@@ -4,7 +4,11 @@
     >
         <h2>Board</h2>
 
-        <MSequence></MSequence>
+        <div v-for="i in nSequences" :key="i">
+            <MSequence
+                v-on:go="processSequenceGo($event)"
+            />
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -19,7 +23,18 @@ import MSequence from '@/components/MSequence.vue';
     }
 })
 export default class MGameBoard extends Vue {
+
+    won = false;
+    nSequences = 1
     
+    processSequenceGo(score: any) {
+        if (score.black == 4) {
+            this.won = true;
+        } else {
+            this.nSequences++;
+        }
+    }
+
 }
 </script>
 <style scoped>
