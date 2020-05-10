@@ -78,7 +78,7 @@ export default class MGameBoard extends Vue {
 </script>
 <style scoped>
 .m-game-board {
-    width: 400px;
+    width: 480px;
     height: 600px;
     border-radius: 8pt;
     border-width: 2px;
@@ -88,6 +88,14 @@ export default class MGameBoard extends Vue {
     justify-self: center;
     align-self: center;
     background:#efefef;
+}
+
+@media only screen and (max-device-width : 640px) {
+    .m-game-board {
+        width: 100vw;
+        height: 100%;
+        justify-self: start;
+    }
 }
 
 .m-button {
