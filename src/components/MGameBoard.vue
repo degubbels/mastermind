@@ -2,7 +2,26 @@
     <div
         class="m-game-board v-card"
     >
-        <h2>Board</h2>
+        <div 
+            v-if="state==states.WON"
+            class="m-game-control"
+        >
+            <h2>You Win!</h2>
+
+            <button class="m-button"
+                @click="reset"
+            >Reset</button>
+        </div>
+
+        <div 
+            v-if="state==states.PRE"
+            class="m-game-control"
+        >
+
+            <button class="m-button"
+                @click="start"
+            >Start</button>
+        </div>
 
         <div v-for="i in nSequences" :key="i">
             <MSequence
@@ -24,17 +43,32 @@ import MSequence from '@/components/MSequence.vue';
 })
 export default class MGameBoard extends Vue {
 
-    won = false;
-    nSequences = 1
+    states = {
+        PRE: 0,
+        PLAYING: 1,
+        WON: 2
+    }
+
+    state = this.states.PRE;
+    nSequences = 0
     
     processSequenceGo(score: any) {
         if (score.black == 4) {
-            this.won = true;
+            this.state = this.states.WON;
         } else {
             this.nSequences++;
         }
     }
 
+    reset() {
+        this.state = this.states.PRE;
+        this.nSequences = 0;
+    }
+
+    start() {
+        this.state = this.states.PLAYING;
+        this.nSequences = 1;
+    }
 }
 </script>
 <style scoped>
@@ -49,5 +83,15 @@ export default class MGameBoard extends Vue {
     justify-self: center;
     align-self: center;
     background:#efefef;
+}
+
+.m-button {
+    width: 10rem;
+    background-color: white;
+    background-color: white;
+}
+
+.m-game-control {
+    align-self: center;
 }
 </style>
