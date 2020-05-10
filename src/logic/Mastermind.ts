@@ -28,6 +28,15 @@ export class Sequence {
 
         return this;
     }
+
+    public static randomSequence() {
+        const colours = [N_PINS];
+        for (let index = 0; index < N_PINS; index++) {
+            colours[index] = Math.floor(Math.random() * N_COLOURS);
+        }
+
+        return new Sequence(colours);
+    }
 }
 
 export class Mastermind {
@@ -38,7 +47,7 @@ export class Mastermind {
     private answer: Sequence;
 
     private constructor() {
-        this.answer = new Sequence([0, 1, 1, 2]);
+        this.answer = Sequence.randomSequence();
     }
 
     // Singleton accessor

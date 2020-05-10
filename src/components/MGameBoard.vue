@@ -36,7 +36,6 @@
     </div>
 </template>
 <script lang="ts">
-import {Mastermind, Sequence} from '@/logic/Mastermind.ts';
 import Component from 'vue-class-component';
 import Vue from 'vue';
 import MSequence from '@/components/MSequence.vue';
@@ -79,7 +78,7 @@ export default class MGameBoard extends Vue {
 <style scoped>
 .m-game-board {
     width: 480px;
-    height: 600px;
+    min-height: 600px;
     border-radius: 8pt;
     border-width: 2px;
     display: flex;
