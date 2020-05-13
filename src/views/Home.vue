@@ -1,7 +1,5 @@
 <template>
-    <div class="m-game-board-parent">
-        <MGameBoard/>
-    </div>
+    <MGameBoard/>
 </template>
 
 <script lang="ts">
@@ -16,8 +14,5 @@ export default Vue.extend({
 })
 </script>
 <style scoped>
-.m-game-board-parent {
-    height: 100%;
-    display: grid;
-}
+
 </style>

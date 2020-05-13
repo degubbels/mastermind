@@ -1,6 +1,6 @@
 <template>
     <div
-        class="m-game-board v-card"
+        class="m-game-board"
     >
         <div 
             v-if="state==states.WON"
@@ -79,14 +79,17 @@ export default class MGameBoard extends Vue {
 .m-game-board {
     width: 480px;
     min-height: 600px;
-    border-radius: 8pt;
-    border-width: 2px;
+  
     display: flex;
     flex-direction: column;
-    padding: 4pt;
-    justify-self: center;
-    align-self: center;
+
     background:#efefef;
+
+    padding: 4pt;
+    border-radius: 8pt;
+    border-width: 2px;
+
+    box-shadow: var( --base-shadow);
 }
 
 @media only screen and (max-device-width : 640px) {
@@ -94,6 +97,8 @@ export default class MGameBoard extends Vue {
         width: 100vw;
         height: 100%;
         justify-self: start;
+
+        border-radius: 0;
     }
 }
 
