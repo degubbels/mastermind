@@ -1,5 +1,6 @@
 <template>
     <div
+        v-if="open"
         v-bind:class="colourClassName"
         class="MColourPin"
     >
@@ -10,15 +11,33 @@
             @change="processColourSelect"
         />
     </div>
+    <div
+        v-else
+        v-bind:class="colourClassName"
+        class="MColourPin"
+    >
+    <v-select disabled>
+    </v-select>
+    </div>
 </template>
 <script lang="ts">
 import Component from 'vue-class-component';
 import Vue from 'vue';
 
 @Component({
-
+    props: [
+        'open'
+    ]
 })
 export default class MColourPin extends Vue {
+
+    // get isDisabled() {
+    //     if (this.$props.open == true) {
+    //         return true
+    //     } else {
+    //         return false;
+    //     }
+    // }
 
     colour = 0;
     colourClassName = 'pin-white';
@@ -45,6 +64,7 @@ export default class MColourPin extends Vue {
 .MColourPin {
     width: 2.5em;
     height: 2.5em;
+    
     /* Really wish I knew a better way to hide the label text... */
     text-indent: -99999px;
     shape-outside: circle();
