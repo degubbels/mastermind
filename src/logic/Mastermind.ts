@@ -64,6 +64,10 @@ export class Mastermind {
         return this.answer;
     }
 
+    public static reset() {
+        Mastermind.I().answer = Sequence.randomSequence();
+    }
+
     // Calculate the number of (black, white) pins for a given guess
     public static calcPins(guess: Sequence) {
         

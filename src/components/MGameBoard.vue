@@ -38,6 +38,9 @@
 <script lang="ts">
 import Component from 'vue-class-component';
 import Vue from 'vue';
+
+import { Mastermind } from '../logic/Mastermind';
+
 import MSequence from '@/components/MSequence.vue';
 
 @Component({
@@ -67,6 +70,7 @@ export default class MGameBoard extends Vue {
     reset() {
         this.state = this.states.PRE;
         this.nSequences = 0;
+        Mastermind.reset();
     }
 
     start() {
