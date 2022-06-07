@@ -23,10 +23,12 @@
 <script lang="ts">
 import Component from 'vue-class-component';
 import Vue from 'vue';
+import { Watch } from 'vue-property-decorator';
 
 @Component({
     props: [
-        'open'
+        'open',
+        'mandatedColour'
     ]
 })
 export default class MColourPin extends Vue {
@@ -38,6 +40,11 @@ export default class MColourPin extends Vue {
     //         return false;
     //     }
     // }
+    @Watch('mandatedColour')
+    onMandatedColourChange(val: number) {
+        this.colour = val;
+        this.colourClassName = this.colours[this.colour].cssClass;
+    }
 
     colour = 0;
     colourClassName = 'pin-white';

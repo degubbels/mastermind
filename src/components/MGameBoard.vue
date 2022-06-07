@@ -2,6 +2,13 @@
     <div
         class="m-game-board"
     >
+        <div
+        v-if="state==states.PLAYING"
+        >
+            <button class="m-button"
+                @click="autoresolve"
+            >Autoresolve</button>
+        </div>
         <div 
             v-if="state==states.WON"
             class="m-game-control"
@@ -31,8 +38,10 @@
         <div v-for="i in nSequences" :key="i">
             <MSequence
                 v-on:go="processSequenceGo($event)"
+                :ref="`seq_${nSequences - i}`"
             />
         </div>
+
     </div>
 </template>
 <script lang="ts">
@@ -40,6 +49,7 @@ import Component from 'vue-class-component';
 import Vue from 'vue';
 
 import { Mastermind } from '../logic/Mastermind';
+import { AI } from '../logic/AI';
 
 import MSequence from '@/components/MSequence.vue';
 
@@ -49,6 +59,9 @@ import MSequence from '@/components/MSequence.vue';
     }
 })
 export default class MGameBoard extends Vue {
+    $refs!: {
+        seq_0: MSequence[];
+    }
 
     states = {
         PRE: 0,
@@ -76,6 +89,10 @@ export default class MGameBoard extends Vue {
     start() {
         this.state = this.states.PLAYING;
         this.nSequences = 1;
+    }
+
+    autoresolve() {
+        const seqref = this.$refs.seq_0[0].set(AI.getMove());
     }
 }
 </script>

@@ -9,18 +9,22 @@
         <MColourPin
             v-on:colour-set="processColourSet(0, $event)"
             :open="open"
+            :mandatedColour="mandatedColours[0]"
         />
         <MColourPin
             v-on:colour-set="processColourSet(1, $event)"
             :open="open"
+            :mandatedColour="mandatedColours[1]"
         />
         <MColourPin
             v-on:colour-set="processColourSet(2, $event)"
             :open="open"
+            :mandatedColour="mandatedColours[2]"
         />
         <MColourPin
             v-on:colour-set="processColourSet(3, $event)"
             :open="open"
+            :mandatedColour="mandatedColours[3]"
         />
 
         <MCheckPins
@@ -46,7 +50,7 @@ import MCheckPins from '@/components/MCheckPins.vue';
     components: {
         MColourPin,
         MCheckPins
-    }
+    },
 })
 export default class MSequence extends Vue {
 
@@ -56,6 +60,8 @@ export default class MSequence extends Vue {
         black: 0,
         white: 0
     }
+
+    mandatedColours: number[] = [0,0,0,0];
 
     sequence: Sequence = new Sequence([0, 0, 0, 0]);
 
@@ -67,6 +73,11 @@ export default class MSequence extends Vue {
         this.score = Mastermind.calcPins(this.sequence);
         this.open = false;
         this.$emit('go', this.score);
+    }
+
+    public set(seq: Sequence) {
+        this.mandatedColours = seq.seq;
+        this.sequence = seq;
     }
 }
 </script>
