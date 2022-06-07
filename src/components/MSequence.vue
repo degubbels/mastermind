@@ -4,20 +4,23 @@
         <button v-if="open" @click="processGo"
             class="sequence-confirm"
         >Go</button>
-        <div v-else class="sequence-confirm empty">
-        </div>
+        <div v-else class="sequence-confirm empty"></div>
         
         <MColourPin
             v-on:colour-set="processColourSet(0, $event)"
+            :open="open"
         />
         <MColourPin
             v-on:colour-set="processColourSet(1, $event)"
+            :open="open"
         />
         <MColourPin
             v-on:colour-set="processColourSet(2, $event)"
+            :open="open"
         />
         <MColourPin
             v-on:colour-set="processColourSet(3, $event)"
+            :open="open"
         />
 
         <MCheckPins
@@ -78,6 +81,7 @@ export default class MSequence extends Vue {
 
 .empty {
     background-color: transparent !important;
+    width: 2.5em;
 }
 
 .m-sequence .sequence-confirm {
