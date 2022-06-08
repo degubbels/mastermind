@@ -53,6 +53,8 @@ import { AI } from '../logic/AI';
 
 import MSequence from '@/components/MSequence.vue';
 
+const RECURSE_MAX = 20;
+
 @Component({
     components: {
         MSequence
@@ -68,6 +70,8 @@ export default class MGameBoard extends Vue {
         PLAYING: 1,
         WON: 2
     }
+
+    recurseCounter = 0;
 
     state = this.states.PRE;
     nSequences = 0
@@ -92,7 +96,15 @@ export default class MGameBoard extends Vue {
     }
 
     autoresolve() {
-        const seqref = this.$refs.seq_0[0].set(AI.getMove());
+        this.$refs.seq_0[0].set(AI.getMove());
+        this.$refs.seq_0[0].processGo();
+
+        // Recurse if not finished
+        if (this.state == this.states.PLAYING && this.recurseCounter < RECURSE_MAX) {
+            this.recurseCounter++;
+            // setTimeout(this.autoresolve, 100);
+            this.$nextTick(()=> this.autoresolve())
+        }
     }
 }
 </script>
