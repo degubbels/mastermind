@@ -56,7 +56,7 @@ export default class MSequence extends Vue {
 
     open = true;
 
-    score: any = {
+    score: { black: number; white: number } = {
         black: 0,
         white: 0
     }
@@ -72,7 +72,7 @@ export default class MSequence extends Vue {
     processGo() {
         this.score = Mastermind.calcPins(this.sequence);
         this.open = false;
-        this.$emit('go', this.score);
+        this.$emit('go', this.sequence, this.score);
     }
 
     public set(seq: Sequence) {

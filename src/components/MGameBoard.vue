@@ -37,7 +37,7 @@
 
         <div v-for="i in nSequences" :key="i">
             <MSequence
-                v-on:go="processSequenceGo($event)"
+                v-on:go="processSequenceGo"
                 :ref="`seq_${nSequences - i}`"
             />
         </div>
@@ -48,7 +48,7 @@
 import Component from 'vue-class-component';
 import Vue from 'vue';
 
-import { Mastermind } from '../logic/Mastermind';
+import { Mastermind, Sequence } from '../logic/Mastermind';
 import { AI } from '../logic/AI';
 
 import MSequence from '@/components/MSequence.vue';
@@ -65,6 +65,9 @@ export default class MGameBoard extends Vue {
         seq_0: MSequence[];
     }
 
+    // Get ai instance for 
+    ai = AI.I();
+
     states = {
         PRE: 0,
         PLAYING: 1,
@@ -74,12 +77,13 @@ export default class MGameBoard extends Vue {
     recurseCounter = 0;
 
     state = this.states.PRE;
-    nSequences = 0
+    nSequences = 0;
     
-    processSequenceGo(score: any) {
+    processSequenceGo(sequence: Sequence, score: { black: number; white: number}) {
         if (score.black == 4) {
             this.state = this.states.WON;
         } else {
+            AI.processResults(sequence, score);
             this.nSequences++;
         }
     }
@@ -87,7 +91,9 @@ export default class MGameBoard extends Vue {
     reset() {
         this.state = this.states.PRE;
         this.nSequences = 0;
+        this.recurseCounter = 0;
         Mastermind.reset();
+        AI.reset();
     }
 
     start() {

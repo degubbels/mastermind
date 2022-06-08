@@ -101,8 +101,13 @@ export class Mastermind {
         Mastermind.I().answer = Sequence.randomSequence();
     }
 
-    // Calculate the number of (black, white) pins for a given guess
+    
     public static calcPins(guess: Sequence) {
+        return Mastermind.calcPinsForAnswer(guess, Mastermind.I().getAnswer());
+    }
+
+    // Calculate the number of (black, white) pins for a given guess
+    public static calcPinsForAnswer(guess: Sequence, answer: Sequence): { black: number; white: number } {
         
         let black = 0;
         let white = 0;
@@ -110,8 +115,6 @@ export class Mastermind {
         // Pins already used
         const guessUsed: boolean[] = new Array(N_PINS).fill(false);
         const answerUsed: boolean[] = new Array(N_PINS).fill(false);
-
-        const answer = Mastermind.I().getAnswer();
 
         // Check for full matches (black)
         for (let i = 0; i < N_PINS; i++) {
