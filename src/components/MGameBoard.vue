@@ -8,6 +8,9 @@
             <button class="m-button"
                 @click="autoresolve"
             >Autoresolve</button>
+            <button class="m-button"
+                @click="suggestMove"
+            >Suggest Move</button>
         </div>
         <div 
             v-if="state==states.WON"
@@ -111,6 +114,11 @@ export default class MGameBoard extends Vue {
             // setTimeout(this.autoresolve, 100);
             this.$nextTick(()=> this.autoresolve())
         }
+    }
+
+    suggestMove() {
+        this.$refs.seq_0[0].set(AI.getMove());
+        this.$refs.seq_0[0].processGo();        
     }
 }
 </script>
