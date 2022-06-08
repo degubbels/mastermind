@@ -37,6 +37,39 @@ export class Sequence {
 
         return new Sequence(colours);
     }
+
+    public static getCombinations(): Sequence[] {
+        const ret: Sequence[] = [];
+
+        // Create sequence objects
+        this.calcCombinations(N_PINS).forEach(seq => {
+            ret.push(new Sequence(seq))
+        });
+
+        return ret;
+    }
+
+    // Recursively calculate all combinations of length n
+    private static calcCombinations(n: number): number[][] {
+
+        const combinations: number[][] = [];
+
+        if (n == 1) {
+            for (let i  = 0; i < N_COLOURS; i++) {
+                combinations.push([i])
+            }
+            return combinations;
+        } else {
+   
+            for (let i = 0; i < N_COLOURS; i++) {
+                
+                this.calcCombinations(n-1).forEach(sequence => {
+                    combinations.push([i].concat(sequence));
+                });
+            }
+            return combinations;
+        }
+    }
 }
 
 export class Mastermind {
