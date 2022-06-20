@@ -5,12 +5,15 @@ export class AI {
     // Singleton instance
     private static _instance: AI;
 
-    private possible: Sequence[];
+    // private possible: Sequence[];
     private fullCombs: Sequence[];
+    private combsPossible: boolean[];      // Track the indices of fullCombs that are still possible
+    private numPossible = 1296;
 
     private constructor() {
-        this.possible = Sequence.getCombinations();
-        this.fullCombs = this.possible;
+        // this.possible = Sequence.getCombinations();
+        this.fullCombs = Sequence.getCombinations();
+        this.combsPossible = new Array(1296).fill(true);
     }
 
     static I(): AI {
@@ -23,7 +26,8 @@ export class AI {
     }
 
     public static reset() {
-        AI.I().possible = Sequence.getCombinations();
+        AI.I().combsPossible = new Array(1296).fill(true);
+        AI.I().numPossible = 1296;
     }
 
     public static getMove(): Sequence {
@@ -37,36 +41,63 @@ export class AI {
 
     // First possible guess AI
     public firstPossibleMove(): Sequence {
-        return this.possible[0]
+        return this.fullCombs[this.combsPossible.indexOf(true)];
+
     }
 
     private optimalMove(): Sequence {
 
         // If only one move is possible; do that
-        // Further improvements may be achievable through better management of when to make only possible moves
-        // This includes always making a possible move over an impossible one should they eliminate the same amount of combinations
-        if (this.possible.length == 1) {
-            return this.possible[0];
+        if (this.numPossible == 1) {
+            return this.fullCombs[this.combsPossible.indexOf(true)];
         }
 
         const sumCounts = new Array(1296).fill(0);
 
         // For each move that could be made
         this.fullCombs.forEach((move, i) => {
-            if (i % 144 == 0) {
+            if (i % 36 == 0) {
                 console.log(i);
             }
 
             // For all possible answers
-            this.possible.forEach(answer => {
-                const count = AI.simEliminateImpossible(move, answer);
+            this.fullCombs.forEach((answer, j) => {
+                if (this.combsPossible[j]) {
+                    const count = AI.simEliminateImpossible(move, answer);
 
-                sumCounts[i] += count;
+                    sumCounts[i] += count;
+                }
             });
         });
 
-        // Return the move that would eliminate the most possible combinations
-        return this.fullCombs[sumCounts.indexOf(Math.max(...sumCounts))];
+        // Find the move that would eliminate the most possible combinations
+        let allBest = 0;
+        let allBestVal = 0;
+        // Also track the best move under only those that could be a possible solution
+        let possibleBest = 0;
+        let possibleBestVal = 0;
+
+        for (let index = 0; index < this.fullCombs.length; index++) {
+
+            if (sumCounts[index] > allBestVal) {
+                allBestVal = sumCounts[index];
+                allBest = index;
+            }
+
+            if (this.combsPossible[index]) {
+                if (sumCounts[index] > possibleBestVal) {
+                    possibleBestVal = sumCounts[index];
+                    possibleBest = index;
+                }
+            }
+        }
+
+        // Return the best move, prefering a possible solution
+        if (possibleBestVal >= allBestVal) {
+            return this.fullCombs[possibleBest];
+        } else {
+            return this.fullCombs[allBest];
+        }
     }
 
     public static processResults(sequence: Sequence, score: { black: number; white: number}) {
@@ -76,7 +107,17 @@ export class AI {
     // Remove all sequence that do not match with the previous score from the list of possible
     private eliminateImpossible(guess: Sequence, score: { black: number; white: number}) {
 
-        this.possible = this.possible.filter((seq) => AI.checkPossible(seq, guess, score));
+        // this.possible = this.possible.filter((seq) => AI.checkPossible(seq, guess, score));
+
+        for (let i = 0; i < this.fullCombs.length; i++) {
+            if (this.combsPossible[i]) {
+
+                if (!AI.checkPossible(this.fullCombs[i], guess, score)) {
+                    this.combsPossible[i] = false;
+                    this.numPossible--;
+                }
+            }
+        }
     }
 
     // Count how many combinations would be eliminated for the given move and answer without actually removing them
@@ -85,9 +126,11 @@ export class AI {
         let elimCount = 0;
         const score = Mastermind.calcPinsForAnswer(move, answer);
 
-        AI.I().possible.forEach(Sequence => {
-            if (!AI.checkPossible(Sequence, move, score)) {
-                elimCount++;
+        AI.I().fullCombs.forEach((Sequence, i) => {
+            if (this.I().combsPossible[i]) {
+                if (!AI.checkPossible(Sequence, move, score)) {
+                    elimCount++;
+                }
             }
         });
 
