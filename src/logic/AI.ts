@@ -1,5 +1,7 @@
 import { Mastermind, Sequence } from "./Mastermind";
 
+const N_COMBS = 1296;
+
 export class AI {
 
     // Singleton instance
@@ -8,12 +10,12 @@ export class AI {
     // private possible: Sequence[];
     private fullCombs: Sequence[];
     private combsPossible: boolean[];      // Track the indices of fullCombs that are still possible
-    private numPossible = 1296;
+    private numPossible = N_COMBS;
 
     private constructor() {
         // this.possible = Sequence.getCombinations();
         this.fullCombs = Sequence.getCombinations();
-        this.combsPossible = new Array(1296).fill(true);
+        this.combsPossible = new Array(N_COMBS).fill(true);
     }
 
     static I(): AI {
@@ -26,8 +28,8 @@ export class AI {
     }
 
     public static reset() {
-        AI.I().combsPossible = new Array(1296).fill(true);
-        AI.I().numPossible = 1296;
+        AI.I().combsPossible = new Array(N_COMBS).fill(true);
+        AI.I().numPossible = N_COMBS;
     }
 
     public static getMove(): Sequence {
@@ -52,7 +54,12 @@ export class AI {
             return this.fullCombs[this.combsPossible.indexOf(true)];
         }
 
-        const sumCounts = new Array(1296).fill(0);
+        // Hardcoded memoisation moves
+        if (this.numPossible == N_COMBS) {
+            return new Sequence([0,0,1,2])
+        }
+
+        const sumCounts = new Array(N_COMBS).fill(0);
 
         // For each move that could be made
         this.fullCombs.forEach((move, i) => {
